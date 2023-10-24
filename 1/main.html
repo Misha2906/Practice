@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quote Manager</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+      }
+      .quote-container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .quote {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #fff;
+        border-radius: 5px;
+      }
+      .red {
+        color: red;
+      }
+      .black {
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quote-container" id="app">
+      <h1>Quotes</h1>
+      <div class="quote" v-for="quote in quotes" :key="quote.id">
+        <h3 :class="quote.quote.length > 40 ? 'red' : 'black'">
+          {{ quote.quote }}
+        </h3>
+        <h5>{{ quote.source }}</h5>
+      </div>
+      <h2>Filter Quotes</h2>
+      <div>
+        <label>
+          <input type="radio" v-model="filterType" value="all" />
+          All
+        </label>
+        <label>
+          <input type="radio" v-model="filterType" value="withAuthor" />
+          With Author
+        </label>
+        <label>
+          <input type="radio" v-model="filterType" value="withoutAuthor" />
+          Without Author
+        </label>
+      </div>
+      <button @click="sortQuotes">Sort by Source</button>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        quotes: [
+          {
+            id: 1,
+            quote: "This is an inspiring quote.",
+            source: "John Doe",
+          },
+          {
+            id: 2,
+            quote: "Another great quote.",
+            source: "Jane Smith",
+          },
+          {
+            id: 3,
+            quote: "A short quote.",
+            source: "",
+          },
+          {
+            id: 4,
+            quote: "A long quote that is longer than 40 characters.",
+            source: "Chris Johnson",
+          },
+        ],
+        filterType: "all",
+      },
+      computed: {
+        filteredQuotes: function () {
+          if (this.filterType === "withAuthor") {
+            return this.quotes.filter((quote) => !!quote.source);
+          } else if (this.filterType === "withoutAuthor") {
+            return this.quotes.filter((quote) => !quote.source);
+          } else {
+            return this.quotes;
+          }
+        },
+      },
+      methods: {
+        sortQuotes: function () {
+          this.quotes.sort((a, b) => (a.source > b.source ? 1 : -1));
+        },
+      },
+    });
+  </script>
+</html>
